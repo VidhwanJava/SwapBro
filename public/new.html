@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <title>SwapBro!</title>
+  </head>
+
+  <body>
+    <!-- Add the latest firebase dependecies from CDN -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
+    <script>
+      var firebaseConfig = {
+        apiKey: "AIzaSyD4Ww30aJTy7dkZHWPWh4egdcQ87b1Ewo8",
+        authDomain: "allianz-4f2a5.firebaseapp.com",
+        databaseURL:
+          "https://allianz-4f2a5-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "allianz-4f2a5",
+        storageBucket: "allianz-4f2a5.appspot.com",
+        messagingSenderId: "1067634164598",
+        appId: "1:1067634164598:web:a57a8428b3b80a57173057",
+      };
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+    </script>
+    <style>
+      table,
+      th,
+      td {
+        border: 1px solid black;
+        border-collapse: collapse;
+      }
+
+      th,
+      td {
+        padding: 10px;
+      }
+
+      table {
+        border-spacing: 5px;
+        text-align: center;
+      }
+    </style>
+    <table id="tab" style="width: 100%">
+      <tr id="tr">
+        <th>Date</th>
+        <th>Morning</th>
+        <th>Day</th>
+        <th>Night</th>
+      </tr>
+    </table>
+
+    <script>
+      var database = firebase.database();
+      var i = 1;
+      database
+        .ref("shift")
+        .orderByChild("date")
+        .once("value", function (snapshot) {
+          if (snapshot.exists()) {
+            var content = "";
+            snapshot.forEach(function (data) {
+              var val = data.val();
+              const today = new Date(Date.now());
+              console.log("date"+today.getDate());
+              if (val.date == today.getDate()) {
+                content += "<tr style='background-color:#ff9c5e; color: white;'>";
+              } 
+              else 
+              content += "<tr>";
+              content += "<td>" + val.date + "</td>";
+              content += "<td>" + val.morning + "</td>";
+              content += "<td>" + val.day + "</td>";
+              content += "<td>" + val.night + "</td>";
+              content += "</tr>";
+            });
+            $("tbody").append(content);
+          }
+        });
+    </script>
+  </body>
+</html>
